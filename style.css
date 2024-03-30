@@ -1,0 +1,347 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root{
+    --x-color: #5a8ffb;
+    --o-color: #dda812;
+    --dark: hsl(227, 54%, 16%);
+    --light: hsl(0, 0%, 100%);
+    --player1: var(--x-color);
+    --light-pink: hsl(350, 79%, 89%);
+    --yellow: hsl(50, 100%, 49%);
+    --player2: var(--o-color);
+    --robot: hsl(0, 100%, 58%);
+    --enemy: hsl(0, 100%, 100%);
+    --easy: hsl(104, 100%, 53%);
+    --mid: hsl(29, 100%, 58%);
+    --hard: hsl(0, 100%, 40%);
+}
+
+body {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    background: #1d4e38;  
+    /* background: -webkit-linear-gradient(to right, #C06C84, #6C5B7B, #355C7D);   */
+    background: linear-gradient(to right, #1d4e38, #198754); 
+    font-family: Rubik;
+    color: var(--dark);
+}
+
+.game-menu,
+.game-pvp,
+.game-pvc,
+.game-board {
+    display: none;
+    align-content: center;
+    justify-content: center;
+    justify-items: center;
+    row-gap: 2rem;
+}
+
+.game-menu {
+    display: grid;
+    cursor: pointer;
+    font-size: 2.4rem;
+}
+
+.game-menu .img-holder {
+    padding: 2rem 0.5rem;
+}
+
+.game-menu .img-holder img {
+    width: 60%;
+}
+
+.card {
+    border: 4px solid hsl(227, 54%, 16%);
+    border-radius: 2rem;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    background-color: hsl(0, 0%, 100%);
+}
+
+header,
+main,
+footer,
+.card,
+.img-holder,
+.prematch-player,
+.board__square,
+.round-result,
+.result--controls,
+.controls__back,
+.controls__next-round,
+.controls__reset-score {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#gameboard {
+    display: grid;
+    grid-template-columns: repeat(3, 90px);
+    grid-gap: 10px;
+    justify-content: center;
+}
+
+.cell {
+    height: 90px;
+    background-color: hsl(198, 36%, 18%);     
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, .5);
+    font-size: 80px;
+    font-weight: bold;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    color: #198754;
+    /* outline: 2px solid rgba(255, 255, 255, .2); */
+}
+
+.cell:not(.X):not(.O):hover {
+    background-color: hsl(198, 36%, 40%);
+    box-shadow: 15px 15px 40px -6px rgba(0, 0, 0, 0.2);
+    /* outline: 2px solid rgba(255, 255, 255, .5); */
+    text-indent: 0px;
+    color: rgba(129, 129, 129, 0.3);
+}
+
+.cell:not(.X):not(.O) {
+    text-indent: -9999px;
+    overflow: hidden;
+}
+
+.cell.O {
+    color: var(--o-color);
+    cursor: not-allowed;
+}
+.cell.X {
+    color: var(--x-color);
+    cursor: not-allowed;
+}
+
+div {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+
+.restart-game {
+    position: absolute;
+    text-align: center;
+    padding: 8px 16px;
+    font-size: 1.4em;
+    border: none;
+    border-radius: 5px;
+    color: cornsilk;
+    background-color: dodgerblue;
+}
+
+.get-mark {
+    position: absolute;
+    text-align: center;
+    padding: 8px 16px;
+    right: 20px;
+}
+
+.finish {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px); 
+    display: none;
+}
+.message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-size: 30px;
+    width: 400px;
+    height: 200px;
+    border-radius: 30px;
+    background-color: linen;
+    box-shadow: 6px 7px 42px 0px rgba(0, 0, 0, 0.9);
+    font-weight: bold;
+    text-shadow: 1px 1px 3px rgba(82, 80, 80, 0.473);
+}
+.message .text{
+    color: #1d4e38;
+    font-family: Rubik;
+}
+.message button {
+    color: #198754;
+    margin-top: 30px;
+    padding: 10px 12px;
+    font-size: 20px;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.finish button {
+    background: -webkit-linear-gradient(100deg, #198754 10%, #1d4e38 150%);
+    /* background: linear-gradient(to right, #1d4e38, #198754);  */
+    color: aliceblue;
+    box-shadow: 1px 1px 5px 2px rgba(128, 128, 128, 0.596);
+    border: none;
+}
+.finish button:active {
+    transform: scale(0.8);
+}
+
+/* additional styles */
+.controls__back {
+    flex-direction: column;
+    cursor: pointer;
+    color: var(--yellow);
+}
+
+.controls__back .img-holder {
+    width: 3rem;
+}
+
+/* SCREEN 2: PVP-PVE */
+.game-pvp,
+.game-pvc {
+    font-size: 1.6rem;
+}
+
+.prematch-info {
+    display: grid;
+    grid-template-columns: 6.5rem auto 6.5rem;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+    padding: 1rem 2.5rem;
+}
+
+.prematch-player {
+    flex-direction: column;
+}
+
+.prematch-player .img-holder {
+    padding: 0.2rem 1rem;
+}
+
+.prematch-player .player-symbol {
+    width: 80%;
+}
+
+.prematch-player input[type='text'] {
+    margin: 1.5rem 0;
+    outline: none;
+    border: none;
+    width: 120%;
+    text-align: center;
+    line-height: calc(100% + 1em);
+    font-family: 'GrilledCheese BTN';
+    font-size: 1.8rem;
+}
+
+.prematch-player input[name='Player 1'] {
+    color: var(--player1);
+}
+
+.prematch-player input[name='Player 1']::placeholder {
+    opacity: 0.5;
+    color: var(--player1);
+}
+
+.prematch-player input[name='Player 2'] {
+    color: var(--player2);
+}
+
+.prematch-player input[name='Player 2']::placeholder {
+    opacity: 0.5;
+    color: var(--player2);
+}
+
+.difficulty-selector {
+    display: flex;
+    grid-column: 1 / 4;
+    align-items: center;
+    justify-content: space-evenly;
+    padding: 1rem 0;
+    width: 100%;
+    gap: 0px;
+}
+
+.difficulty,
+.player-info__difficulty {
+    border: 4px solid var(--dark);
+    border-radius: 1rem;
+    cursor: pointer;
+    padding: 0.5rem 0.8rem;
+    text-align: center;
+    text-transform: uppercase;
+    color: var(--light);
+    font-size: 1rem;
+}
+
+.easy {
+    background-color: var(--easy);
+}
+
+.mid {
+    background-color: var(--mid);
+}
+
+.hard {
+    background-color: var(--hard);
+}
+
+.btn-fight {
+    grid-column: 1 / 4;
+    border: 4px solid var(--dark);
+    border-radius: 1.5rem;
+    background-color: var(--yellow);
+    cursor: pointer;
+    padding: 0.3rem 0;
+    width: 100%;
+    text-align: center;
+    font-size: 2.4rem;
+}
+
+.result--controls {
+    grid-column: 1 / 3;
+    align-items: flex-end;
+    justify-content: space-around;
+    width: 100%;
+    height: 4.4rem;
+    letter-spacing: 0px;
+    color: var(--yellow);
+    font-size: 1.6rem;
+}
+
+.controls__back,
+.controls__next-round,
+.controls__reset-score {
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.controls__next-round,
+.controls__reset-score {
+    display: none;
+}
+
+.controls__next-round {
+    line-height: calc(100% - 0.1em);
+    font-size: 2.4rem;
+}

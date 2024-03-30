@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Tic Tac Toe | The Game Reimagined</title>
+</head>
+<body>
+    <h1>Tic Tac Toe</h1>
+    <div class="turns"></div>
+    <div class="screen game-menu">
+        <div
+            class="pvp-mode card animate-bob navigation"
+            data-target="game-pvp"
+        >
+            <div class="img-holder">
+                <img src="svg/player.svg" alt="Player 1" />
+            </div>
+
+            <span>VS</span>
+
+            <div class="img-holder">
+                <img src="svg/player-alt.svg" alt="Player 2" />
+            </div>
+        </div>
+
+        <div
+            class="pvc-mode card animate-bob navigation"
+            data-target="game-pvc"
+        >
+            <div class="img-holder">
+                <img src="svg/player.svg" alt="Player 1" />
+            </div>
+            <span>VS</span>
+            <div class="img-holder">
+                <img src="svg/robot.svg" alt="Robot" />
+            </div>
+        </div>
+    </div>
+
+    <div class="screen game-pvp">
+        <div class="card">
+          <div class="prematch-info">
+            <div class="prematch-player">
+              <div class="img-holder">
+                <img src="svg/player.svg" alt="Player 1" />
+              </div>
+              <div class="img-holder player-symbol">
+                <img src="svg/cross.svg" alt="Cross" />
+              </div>
+              <input
+                type="text"
+                placeholder="Player 1"
+                name="Player 1"
+                id="player-1"
+                maxlength="8"
+                class="text-stroke animate-bob-auto"
+              />
+            </div>
+
+            <span>VS</span>
+
+            <div class="prematch-player">
+              <div class="img-holder">
+                <img src="svg/player-alt.svg" alt="Player 1" />
+              </div>
+              <div class="img-holder player-symbol">
+                <img src="svg/circle-blue.svg" alt="Circle" />
+              </div>
+              <input
+                type="text"
+                placeholder="Player 2"
+                name="Player 2"
+                id="player-2"
+                maxlength="8"
+                class="text-stroke animate-bob-auto"
+              />
+            </div>
+
+            <div
+              class="pvp-fight-btn btn-fight navigation"
+              data-target="game-board"
+            >
+              FIGHT!
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="controls__back animate-scale navigation"
+          data-target="game-menu"
+        >
+          <div class="img-holder">
+            <img src="svg/arrow-back.svg" alt="Back to menu" />
+          </div>
+          <span class="text-stroke">Back</span>
+        </div>
+    </div>
+
+    <div class="screen game-pvc">
+      <div class="card">
+        <div class="prematch-info">
+          <div class="prematch-player">
+            <div class="img-holder">
+              <img src="svg/player.svg" alt="Player 1" />
+            </div>
+            <div class="img-holder player-symbol">
+              <img src="svg/cross.svg" alt="Cross" />
+            </div>
+          </div>
+
+          <span>VS</span>
+
+          <div class="prematch-player">
+            <div class="img-holder">
+              <img src="svg/robot.svg" alt="Robot" />
+            </div>
+            <div class="img-holder player-symbol">
+              <img src="svg/circle-red.svg" alt="Circle" />
+            </div>
+          </div>
+
+          <div class="difficulty-selector text-stroke">
+            <div
+              class="difficulty easy animate-bob animate-grayscale"
+              data-difficulty="easy"
+            >
+              <span>Easy</span>
+            </div>
+            
+            <div
+              class="difficulty hard animate-bob animate-grayscale"
+              data-difficulty="hard"
+            >
+              <span>Hard</span>
+            </div>
+          </div>
+
+          <div
+            class="pvc-fight-btn btn-fight navigation"
+            data-target="game-board"
+          >
+            FIGHT!
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="controls__back animate-scale navigation"
+        data-target="game-menu"
+      >
+        <div class="img-holder">
+          <img src="svg/arrow-back.svg" alt="Back to menu" />
+        </div>
+        <span class="text-stroke">Back</span>
+      </div>
+    </div>
+
+    <div class="screen game-board">
+      <div id="gameboard">
+        <div class="cell" data-index="0"></div>
+        <div class="cell" data-index="1"></div>
+        <div class="cell" data-index="2"></div>
+        <div class="cell" data-index="3"></div>
+        <div class="cell" data-index="4"></div>
+        <div class="cell" data-index="5"></div>
+        <div class="cell" data-index="6"></div>
+        <div class="cell" data-index="7"></div>
+        <div class="cell" data-index="8"></div>
+      </div>
+      <div class="result--controls">
+        <div
+          class="controls__back animate-scale text-stroke navigation"
+          data-target="game-menu"
+        >
+          <div class="img-holder">
+            <img src="svg/arrow-back.svg" alt="Back to menu" />
+          </div>
+          <span>Back</span>
+        </div>
+
+        <div class="controls__next-round animate-scale text-stroke">
+          <span>Next</span>
+          <span>Round!</span>
+        </div>
+
+        <div class="controls__reset-score animate-scale text-stroke">
+          <span>Reset</span>
+          <span>Score</span>
+        </div>
+      </div>
+    </div>
+    
+    
+    <!-- <button type="button" class="restart-game">Restart Game</button>
+    <button class="get-mark">Get mark</button> -->
+
+    <div class="finish">
+        <div class="message">
+            <span class="text"></span>
+            <button id="restart">Play Again</button>
+        </div>
+    </div>
+
+    <script src="./app.js"></script>
+</body>
+</html>
