@@ -4,5 +4,6 @@
         "Gameboard",
         "Manu",
         "Reimagined"
-    ]
+    ],
+    "svg.preview.background": "editor"
 }

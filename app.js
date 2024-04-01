@@ -51,127 +51,157 @@ const Player = (Name, Mark) => {
 let player1 = Player('Player 1', 'X');
 let player2 = Player('Player 2', 'O');
 
+/**
+ * The `gameController` function is responsible for managing the game logic in the tic-tac-toe application.
+ * It handles checking for win conditions, determining the next player, and making moves for the computer player.
+ */
 const gameController = (() => {
-    let board = Gameboard.getBoard();
-    let isGameOver = false;
-    let whoIsNextIndex = 0;
-    
-    // Helper function to check win condition for a given board state and player mark
-    const checkWin = (tempBoard, playerMark) => {
-      const winningCombinations = [
-        [0, 1, 2], [3, 4, 5], [6, 7, 8],
-        [0, 3, 6], [1, 4, 7], [2, 5, 8],
-        [0, 4, 8], [2, 4, 6]
-      ];
-    
-      for (let combination of winningCombinations) {
-        const [a, b, c] = combination;
-        if (tempBoard[a] === playerMark && tempBoard[a] === tempBoard[b] && tempBoard[a] === tempBoard[c]) {
-          return true; // Win condition met
-        }
-      }
-      return false; // No win condition met
-    }; 
+  let board = Gameboard.getBoard();
+  let isGameOver = false;
+  let whoIsNextIndex = 0;
+  const gameBoardDisplay = document.querySelector('#gameboard');
+  const turnDisplay = document.querySelector('.turns');
 
-    // Function to check if the board is full
-    const checkDraw = (board) => {
-      for (let cell of board) {
-        if (cell === '') {
-          return false; // Stop checking as soon as an empty cell is found
-        }
-      }
-      return true;
-    };
+  /**
+   * Checks if a win condition has been met for a given player mark by iterating through all possible winning combinations.
+   * @param {Array} tempBoard - An array representing the current state of the game board.
+   * @param {string} playerMark - A string representing the mark ('X' or 'O') of the player.
+   * @returns {boolean} - Returns true if a win condition has been met, false otherwise.
+   */
+  const checkWin = (tempBoard, playerMark) => {
+    const winningCombinations = [
+      [0, 1, 2], [3, 4, 5], [6, 7, 8],
+      [0, 3, 6], [1, 4, 7], [2, 5, 8],
+      [0, 4, 8], [2, 4, 6]
+    ];
 
-    // Function for intelligent Computer Move
-    const intelligentComputerMove = (board) => {
-      let availableMoves = board.reduce((acc, cell, index) => {
-        if (cell === '') acc.push(index);
-        return acc;
-      }, []);
-    
-      // Prioritize winning move
-      let winningMove = findWinningMove('O', availableMoves);
-      if (winningMove !== -1) {
-        board[winningMove] = 'O';
-        // gameController.getNextPlayer();
-        setTimeout(() => {displayController.renderDisplay()}, 700);
-        console.log('winningMove');
-        return;
+    for (let combination of winningCombinations) {
+      const [a, b, c] = combination;
+      if (tempBoard[a] === playerMark && tempBoard[a] === tempBoard[b] && tempBoard[a] === tempBoard[c]) {
+        return true; // Win condition met
       }
-    
-      // Block opponent's winning move
-      let blockingMove = findWinningMove('X', availableMoves);
-      if (blockingMove !== -1) {
-        board[blockingMove] = 'O';
-        // gameController.getNextPlayer();
-        setTimeout(() => {displayController.renderDisplay()}, 700);
-        console.log('block');
-        return;
-      }
-      
-      // Stop searching if a winning or blocking move is found
-      if (winningMove === -1 && blockingMove === -1) {
-        // Fallback to random move if no strategic move found
-        let randomIndex = Math.floor(Math.random() * availableMoves.length);
-        let move = availableMoves[randomIndex];
-        // board[move] = 'O';
-        Gameboard.markCell(move, 'O');
-        // gameController.getNextPlayer();
-        setTimeout(() => {displayController.renderDisplay()}, 700);
-        console.log('random');
-      }
-    };
-    
-    // Helper function to find a winning or blocking move
-    const findWinningMove = (playerMark, availableMoves) => {
-      for (let move of availableMoves) {
-        let tempBoard = [...board]; // Copy current board state
-        tempBoard[move] = playerMark; // Try placing player mark on each available move
-        if (checkWin(tempBoard, playerMark)) {
-          return move; // Return the move if it results in a win
-        }
-      }
-      return -1; // Return -1 if no winning/blocking move found
-    };
-    
+    }
+    return false; // No win condition met
+  };
 
-    // Function to make computer move randomly
-    const computerMove = (board) => {
-      let availableMoves = board.reduce((acc, cell, index) => {
-        if (cell === '') acc.push(index);
-        return acc;
-      }, []);
-      
+  /**
+   * Checks if the game board is full and no win condition has been met.
+   * @param {Array} board - An array representing the current state of the game board.
+   * @returns {boolean} - Returns true if the game is a draw, false otherwise.
+   */
+  const checkDraw = (board) => {
+    return board.every(cell => cell !== '');
+  };
+
+  /**
+   * Makes a move for the computer player based on the game strategy.
+   * @param {Array} board - An array representing the current state of the game board.
+   */
+  const intelligentComputerMove = (board) => {
+    let availableMoves = board.reduce((acc, cell, index) => {
+      if (cell === '') acc.push(index);
+      return acc;
+    }, []);
+
+    // Prioritize winning move
+    let winningMove = findWinningMove('O', availableMoves);
+    if (winningMove !== -1) {
+      board[winningMove] = 'O';
+      setTimeout(() => { displayController.renderDisplay() }, 700);
+      console.log('winningMove');
+      return;
+    }
+
+    // Block opponent's winning move
+    let blockingMove = findWinningMove('X', availableMoves);
+    if (blockingMove !== -1) {
+      board[blockingMove] = 'O';
+      setTimeout(() => { displayController.renderDisplay() }, 700);
+      console.log('block');
+      return;
+    }
+
+    // Stop searching if a winning or blocking move is found
+    if (winningMove === -1 && blockingMove === -1) {
+      // Fallback to random move if no strategic move found
       let randomIndex = Math.floor(Math.random() * availableMoves.length);
       let move = availableMoves[randomIndex];
       Gameboard.markCell(move, 'O');
-      setTimeout(() => {displayController.renderDisplay()}, 700);
-    };
+      setTimeout(() => { displayController.renderDisplay() }, 700);
+      console.log('random');
+    }
+  };
 
-    const getCurrPlayer = () => {
-      const player = [player1, player2][whoIsNextIndex];
-      return player;
-    };
-    
-    const getNextPlayer = () => {
-      whoIsNextIndex = whoIsNextIndex === 0 ? 1 : 0;
-      const player = [player1, player2][whoIsNextIndex];
-      return player;
-    };
-    
-    const getGameOver = () => isGameOver;
-    
-    return {
-      checkWin, 
-      checkDraw, 
-      computerMove, 
-      intelligentComputerMove,
-      getCurrPlayer, 
-      getNextPlayer,
-      getGameOver
-    };
-  })();
+  /**
+   * Finds a winning or blocking move by trying each available move on a temporary board.
+   * @param {string} playerMark - A string representing the mark ('X' or 'O') of the player.
+   * @param {Array} availableMoves - An array of available moves on the game board.
+   * @returns {number} - Returns the index of a winning or blocking move, or -1 if no such move is found.
+   */
+  const findWinningMove = (playerMark, availableMoves) => {
+    for (let move of availableMoves) {
+      let tempBoard = [...board]; // Copy current board state
+      tempBoard[move] = playerMark; // Try placing player mark on each available move
+      if (checkWin(tempBoard, playerMark)) {
+        return move; // Return the move if it results in a win
+      }
+    }
+    return -1; // Return -1 if no winning/blocking move found
+  };
+
+  /**
+   * Makes a random move for the computer player.
+   * @param {Array} board - An array representing the current state of the game board.
+   */
+  const computerMove = (board) => {
+    let availableMoves = board.reduce((acc, cell, index) => {
+      if (cell === '') acc.push(index);
+      return acc;
+    }, []);
+
+    let randomIndex = Math.floor(Math.random() * availableMoves.length);
+    let move = availableMoves[randomIndex];
+    Gameboard.markCell(move, 'O');
+    setTimeout(() => { displayController.renderDisplay() }, 700);
+  };
+
+  /**
+   * Gets the current player.
+   * @returns {Object} - Returns the current player object.
+   */
+  const getCurrPlayer = () => {
+    const player = [player1, player2][whoIsNextIndex];
+    return player;
+  };
+
+  /**
+   * Gets the next player and updates the game board display and turn display.
+   * @returns {Object} - Returns the next player object.
+   */
+  const getNextPlayer = () => {
+    whoIsNextIndex = whoIsNextIndex === 0 ? 1 : 0;
+    const player = [player1, player2][whoIsNextIndex];
+    gameBoardDisplay.setAttribute('data-turn', player.getMark().toLowerCase());
+    turnDisplay.textContent = `${player.getName()}'s Turn`;
+    return player;
+  };
+
+  /**
+   * Gets the game over status.
+   * @returns {boolean} - Returns true if the game is over, false otherwise.
+   */
+  const getGameOver = () => isGameOver;
+
+  return {
+    checkWin,
+    checkDraw,
+    computerMove,
+    intelligentComputerMove,
+    getCurrPlayer,
+    getNextPlayer,
+    getGameOver
+  };
+})();
   
 const displayController = (() => {
     let board = Gameboard.getBoard();
@@ -182,6 +212,10 @@ const displayController = (() => {
     const navigationBtns = document.querySelectorAll('.navigation');
     const gameScreens = document.querySelectorAll('.screen');
     const difficultyBtns = document.querySelectorAll('.difficulty');
+    const turnDisplay = document.querySelector('.turns');
+    const gameBoardDisplay = document.querySelector('#gameboard');
+    const playerOneInput = document.querySelector('#player-1');
+    const playerTwoInput = document.querySelector('#player-2');
 
     const setDisplayStyle = (value, ...elements) => {
       elements.forEach((element) => (element.style.display = value));
@@ -196,28 +230,31 @@ const displayController = (() => {
 
 
     navigationBtns.forEach((button) => {
+      button.setAttribute('role', 'button');
       button.addEventListener('click', () => {
-        navigateTo(button.dataset.target);
-        // console.log(gameController.getGameOver());
+        button.classList.add('clicked');
+        setTimeout(() => {
+          navigateTo(button.dataset.target)
+          button.classList.remove('clicked');
+        }, 500);
       });
     });
 
     const prepareScreen = (screen) => {
       switch (screen) {
         case 'game-menu':
-          removeBoardListener(cells);
           Gameboard.resetBoard();
           board = Gameboard.getBoard();
           resetGame();
+          turnDisplay.textContent = '';
+          gameBoardDisplay.setAttribute('data-turn', 'x');
           break;
     
         case 'game-pvp':
-          // setEnemyAttributes(playerTwoPicture, playerTwoColor, playerTwoSymbol);
           gameMode = 'pvp';
           break;
     
         case 'game-pvc':
-          // setEnemyAttributes(robotPicture, robotColor, robotSymbol);
           player1 = Player('Human', 'X');
           player2 = Player('Robot', 'O');
           gameMode = 'pvc';
@@ -225,11 +262,10 @@ const displayController = (() => {
     
         case 'game-board':
           addBoardListener(cells);
-          // board = ['','','','','','','','',''];
-          // createPlayers();
-          // refreshScores();
-          // fillBoardCards();
-          // animatePlayerCard('x'); // When starting a new match, X always goes first
+          if (gameMode == 'pvp') {
+            player1 = Player( playerOneInput.value || 'Player 1', 'X');
+            player2 = Player( playerTwoInput.value || 'Player 2', 'O');
+          }
           break;
         }
       };
@@ -244,34 +280,33 @@ const displayController = (() => {
 
     const toggleDifficultyBtn = (clickedButton) => {
       difficultyBtns.forEach((button) => {
+        button.classList.remove('clicked');
         button.classList.remove('current-difficulty');
-        // button.classList.add('animate-bob', 'animate-grayscale');
       });
       clickedButton.classList.add('current-difficulty');
-      // clickedButton.classList.remove('animate-bob', 'animate-grayscale');
+      clickedButton.classList.add('clicked');
     };
 
-    difficultyBtns.forEach((button) =>
+    difficultyBtns.forEach((button) => {
+      button.setAttribute('role', 'button');
       button.addEventListener('click', () => {
         toggleDifficultyBtn(button);
         gameDifficulty = button.dataset.difficulty;
         console.log(gameDifficulty);
       })
-    );
+    });
 
     const clearBoard = () => {
       cells.forEach((cell) => {
         cell.textContent = '';
         cell.classList.remove('X','O');
       });
-      // setDisplayStyle('none', roundResult, boardNextRoundBtn, boardResetScoreBtn);
     };
 
     const resetGame = () => {
       clearBoard();
-      // playerOneInput.value = '';
-      // playerTwoInput.value = '';
-      // boardDifficultyTag.classList.remove(gameDifficulty); // Prevents DifficultyTag from stacking styles when difficulty is changed
+      playerOneInput.value = '';
+      playerTwoInput.value = '';
     };
 
     function gameOver(gameStatus, winner) {  
@@ -288,7 +323,6 @@ const displayController = (() => {
       
       cells.forEach((cell) => {
         let index = cell.getAttribute('data-index');
-        cell.textContent = board[index];
         if (board[index]) {
           cell.classList.add(board[index]);
         }
@@ -362,6 +396,3 @@ const displayController = (() => {
     }
 })();
 
-
-// Start the game
-// displayController.renderDisplay();
